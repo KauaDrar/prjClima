@@ -4,12 +4,18 @@ import Tempo from './components/Tempo';
 import Api from './components/Api';
 
 export default function App() {
+    const [depois, setDepois] = useState("");
+    const [atuais, setAtuais] = useState("");
     const [dados, setDados] = useState("");
+    const [cidade, setCidade] = useState("");
 
     async function carregaDados(){
-      const response = await Api.get('weather?array_limit=1&fields=only_results,temp,city_name,description,forecast,max,min,date&key=a3460caf&city_name=mongagua,SP')
-      setDados(response.data.forecast[0]);
+      const response = await Api.get(`weather?array_limit=2&fields=only_results,temp,city_name,forecast,max,min,date,description&key=a3460caf&city_name=${cidade},SP`)
+      setAtuais(response.data.forecast[0]);
+      setDepois(response.data.forecast[1]);
+      setDados(response.data)
     }
+
   return (
     <View style={styles.container}>
       <View>
@@ -19,6 +25,7 @@ export default function App() {
           <Text style={styles.label}> Cidade: </Text>
           <TextInput placeholder= 'Digite sua Cidade'
           style={styles.input}
+          onChangeText = {(value) => setCidade(value)}
           />
           </View>
         <View style={styles.bloco}>
@@ -28,7 +35,9 @@ export default function App() {
         </View>
     
     <View style={styles.bloco}>
-        <Tempo clima={dados}/>
+        <Tempo atuais={atuais}
+        depois={depois}
+        dados={dados}/>
     </View>
 
     </View>
@@ -37,20 +46,21 @@ export default function App() {
 
 const styles = StyleSheet.create({
   body: {
-    backgroundColor: "#edf6f9",
+    backgroundColor: "#01497c",
   },
 
   container: {
     flex: 1,
-    marginTop: '30%',
+    paddingTop: '20%',
+    backgroundColor: "#01497c",
   },
 
   titulo: {
     fontSize: 30,
-    marginTop: 35,
+    marginTop: 1,
     textAlign: 'center',
     fontWeight: 'bold',
-    color: '#006d77'
+    color: '#fff'
   },
 
   label: {
@@ -58,7 +68,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     textAlign: 'center',
     fontWeight: 'bold',
-    color: '#006d77'
+    color: '#fff'
   },
 
   bloco: {
@@ -69,15 +79,17 @@ const styles = StyleSheet.create({
 
   input: {
     borderBottomWidth: 2,
+    borderColor: '#fff',
     width: '80%',
     marginLeft: '8%',
     marginTop: 20,
     fontSize: 20,
+    color: '#fff'
   },
 
   botao: {
     width: '80%',
-    backgroundColor: '#006d77',
+    backgroundColor: '#016BB7',
     alignItems: 'center',
     justifyContent: 'center',
     width: 200,
@@ -87,6 +99,6 @@ const styles = StyleSheet.create({
 
   textoBotao: {
     fontSize: 20,
-    color: '#83c5be'
+    color: '#fff'
   }
 });
